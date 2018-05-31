@@ -1,0 +1,162 @@
+Autonom båt
+Hitta den kortaste vägen och undvika objekt
+15:04 19 Dec 2017
+Tags: foo, bar, baz
+
+Jesper Vesterberg
+Nästan Civilingenjör
+jumziey@gmail.com
+
+
+* Dockstavarvets övergripande projekt
+- Radio styrning
+- Uppgradering
+- Sensorer
+- Autonoma beslut
+.image images/autobat.svg 324 637 
+
+* Autonoma beslut
+- Kortaste väg
+- Undvika objekt
+- Sjöfarts regler
+.image images/autonomity.svg 400 _
+
+* Klassisk kortaste väg
+- Dijkstra / A*
+- Grafer, noder o kanter
+.image images/graph-weighted.png 350 _
+
+* Passar vägsystem
+.image images/graph-weighted-map.png 450 _
+Kostnaden att traversera kanter kan bero på hastighetsbegränsingar och väglängd
+
+* Dijkstras algoritm
+- Edsger Dijkstra 1959
+- Utvecklad för att vara så enkel att "non-computing people" kan förstå
+- Grunden för kortaste väg beräkningar
+- Baserat på att endast gå till noder som är så nära som möjligt
+.image images/dijkstra.jpg 300 300
+
+
+* Dijkstra - exempel
+Vars vill vi?
+.image images/graph-weighted-dijkstra-1.png 450 _
+
+
+* Dijkstra - exempel
+Då börjar vi gå då!
+.image images/graph-weighted-dijkstra-2.png 450 _
+
+* Dijkstra - exempel
+Vi fortsätter vid den nod som tagit oss minst antal steg att nå
+.image images/graph-weighted-dijkstra-3.png 450 _
+
+* Dijkstra - exempel
+Och så loopar vi...
+.image images/graph-weighted-dijkstra-4.png 450 _
+
+* Dijkstra - exempel
+Så har vi vår kortaste väg
+.image images/graph-weighted-dijkstra-5.png 450 _
+
+* A* - Heuristik istället för distanser från start
+- Nils Nilsson, Peter E. Hart, Betram Raphael 1968 (Dessa algoritmer har funnits ett tag)
+- En "känsla" av vars slut destinationen ligger
+- Heuristisk = <distansen till en nod> +  <Estimerat distans från nod till mål>
+- Heuristiska istället för distans från start.
+- Lägg till bild för att visa heurstik + väg gått
+.image images/heuristic.jpg _ 400
+
+* Rutnät! - Specialfall av grafer	
+.image images/graph-grid.png 400 _
+Varje nod blir en ruta i rutnätet
+(Efter detta kommer visualiseringar, don't worry, be happy)
+
+
+* A* vs Dijkstra 
+.video vids/short-path-simple.ogv video/ogg _ 1000
+
+* Dijkstra vs A* 
+.video vids/short-path-obst.ogv video/ogg _ 1000
+
+* Tyvärr :(  
+.image images/street-vs-sea.png _ 1000
+
+* Meshes to the rescue!
+- Navigations Meshes - Trianglar som definerar farbart vatten
+.image images/meshExample.png _ 900
+
+* Hitta kortaste väg
+.image images/meshToGraph.png _ 500
+.image images/meshDirect.png _ 500
+
+* Kortaste väg på Mesh
+- Polyanya - Michael L. Cui, Daniel D. Harabor, Alban Grastien - 2017
+- A* rakt av! Det enda vi _egentligen_ förändrar är vad en nod är och hur vi går till nästa nod (Med andra ord så förändrar vi allt)
+.image images/mesh-angle.jpg
+
+* Nod
+- Rot
+- Intervall
+- Heuristiken
+.image images/node.png 400 _
+
+* Uppdatering
+- Nästa triangels kanter - Nytt intervall
+- Byt rot om roten inte kan se det nya intervallet
+.image images/node-update.png 400 _
+
+* Projektion
+.image images/update.png 380 _
+Notering: navigations meshen definierar allt vi kan se
+
+* Slutresultat
+- Optimalt, förutsägbart
+- Resten handlar bara om mesh hantering!
+.image images/path.png 400 _
+
+
+* Lägga till hinder
+.image images/ice-berg.png 500 _
+
+* Designa hål
+.image images/obstacle-centroid.png 250 _
+.image images/obstacle-margin.png 250 _
+
+
+* Sjöfartsregler, t.ex. högerregeln
+.image images/boat-meet.png 500 _
+- Man måste även modellera vars mötande båt kommer infinna sig vid mötet
+- Olika estimeringar för båt, färja, vattenskoter m.m.
+
+* Estimering av dynamiska objekt
+En separat funktion som bara tittar på ett enskilt objekt och den nuvarande uträknade vägen
+.image images/dynamic-object.png 450 _
+
+* Testing - Hitta rätt
+10 miljoner gånger rätt!
+.image images/test-map-actual.png 500 _
+
+* Testing - effektivitet
+Ett band av trianglar som algoritmen måste ta sig igenom (Notera att hela denna sträckan kan definieras av två trianglar istället)
+.image images/triangle-strip.png 200 _
+
+* Testing - effektivitet
+.image images/find-path-performance.png 400 _
+
+* Problem 
+- Mesh hantering! Strukturen på en avancerad mesh avgör effektiviteten av algoritmen
+- Polygon hantering: löst men svårt!
+.image images/compare-triangles.png _ 1000
+
+* Kvar till augusti
+- Bättre mesh
+- Dynamiska tester
+.image images/left-to-do.jpg _ 350
+
+* Saker som hade varit intressant att undersöka
+- Optimera mesh parametrar. Snabbare ta bort linjer som inte är lovande
+- Lägga till en bra modell för att prediktera dynamiska objekt
+.image images/testing.jpg _ 350
+
+Frågor?
